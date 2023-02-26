@@ -3,7 +3,7 @@ import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/password_screen.dart';
 
-import '../widgets/form_button.dart';
+import 'widgets/form_button.dart';
 
 class EmailScreen extends StatefulWidget {
   const EmailScreen({super.key});
@@ -111,7 +111,8 @@ class _EmailScreenState extends State<EmailScreen> {
               GestureDetector(
                 onTap: _onSubmit,
                 child: FormButton(
-                    disabled: _email.isEmpty || _isEmailValid() != null),
+                    disabled: _email.isEmpty || _isEmailValid() != null,
+                    text: "Next"),
               ),
             ],
           ),

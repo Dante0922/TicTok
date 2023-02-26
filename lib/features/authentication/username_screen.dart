@@ -3,7 +3,7 @@ import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/email_screen.dart';
 
-import '../widgets/form_button.dart';
+import 'widgets/form_button.dart';
 
 class UsernameScreen extends StatefulWidget {
   const UsernameScreen({super.key});
@@ -94,9 +94,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
             Gaps.v16,
             GestureDetector(
                 onTap: _onNextTap,
-                child: FormButton(
-                  disabled: _username.isEmpty,
-                )),
+                child: FormButton(disabled: _username.isEmpty, text: "Next")),
           ],
         ),
       ),
