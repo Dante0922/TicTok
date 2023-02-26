@@ -13,7 +13,8 @@ class EmailScreen extends StatefulWidget {
 }
 
 class _EmailScreenState extends State<EmailScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController =
+      TextEditingController(); //Controller 선언
 
   String _email = "";
 
@@ -21,24 +22,26 @@ class _EmailScreenState extends State<EmailScreen> {
   void initState() {
     super.initState();
     _emailController.addListener(() {
+      //컨트롤러의 값이 바뀔 때마다 setState를 작동
       setState(() {
-        _email = _emailController.text;
+        _email = _emailController.text; //_email 값을 컨트롤러.text로 변경.
       });
     });
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _emailController
+        .dispose(); //컨트롤런느 dispose하지 않으면 계속 값을 갖고 있기 때문에 메모리를 위해 꼭 해줘야 함.
     super.dispose();
   }
 
   String? _isEmailValid() {
     if (_email.isEmpty) return null;
     final regExp = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"); //정규식? 이메일 양식이 맞는지 판단해준다.
     if (!regExp.hasMatch(_email)) {
+      //정규식.hasMatch를 통해 _email의 양식이 정규식에 부합하는지 체크.
       return "Email not vaild";
     }
 
@@ -90,7 +93,8 @@ class _EmailScreenState extends State<EmailScreen> {
                 controller: _emailController,
                 cursorColor: Theme.of(context).primaryColor,
                 keyboardType: TextInputType.emailAddress,
-                onEditingComplete: _onSubmit,
+                onEditingComplete:
+                    _onSubmit, //이 함수를 지정함으로써 키보드의 완료를 눌렀을 때 _onSubmit 함수가 발동할 수 있도록 해준다.
                 autocorrect: false,
                 decoration: InputDecoration(
                   hintText: "Email",

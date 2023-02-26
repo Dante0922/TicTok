@@ -8,10 +8,13 @@ class PostVideoButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isClicked = false;
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Positioned(
+          //스택의 자식으로 위치를 따로 지정할 수 있도록 해주는 위젯 right 20 과 같이 처리하려면 기준이 있으여 한다. 여기선 Container가 기준.
           right: 20,
           child: Container(
             height: 30,

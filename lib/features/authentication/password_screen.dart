@@ -14,6 +14,7 @@ class PasswordScreen extends StatefulWidget {
 }
 
 class _PasswordScreenState extends State<PasswordScreen> {
+  //상태 변경을 체크하기 위해 컨트롤러를 생성
   final TextEditingController _passwordController = TextEditingController();
 
   String _password = "";
@@ -22,6 +23,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
   @override
   void initState() {
     super.initState();
+    //컨트롤러에 이벤트리스너를 추가하여 컨트롤러가 변경될 때마다 setState를 실행
     _passwordController.addListener(() {
       setState(() {
         _password = _passwordController.text;
@@ -94,7 +96,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                 controller: _passwordController,
                 cursorColor: Theme.of(context).primaryColor,
                 onEditingComplete: _onSubmit,
-                obscureText: _obscureText,
+                obscureText: _obscureText, //obscureText: 비밀번호 등의 *** 처리
                 autocorrect: false,
                 decoration: InputDecoration(
                   suffix: Row(
@@ -110,7 +112,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                       ),
                       Gaps.h16,
                       GestureDetector(
-                        onTap: _toggleObscureText,
+                        onTap:
+                            _toggleObscureText, // ontap을 통해 toggleObscureText함수를 작동시키면 _obscureText T/F 변경 -> eye / eyeSlash
                         child: FaIcon(
                           _obscureText
                               ? FontAwesomeIcons.eye

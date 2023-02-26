@@ -25,6 +25,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        //화면 최상단 시계/배터리 라인과 같이 사용자의 기본 인터페이스에 충돌되지 않도록 위젯을 감싸준다.
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: Sizes.size40,
@@ -48,6 +49,7 @@ class LoginScreen extends StatelessWidget {
               ),
               Gaps.v40,
               AuthButton(
+                //Button인데 ontap을 보유하고 있는 위젯.
                 icon: const FaIcon(FontAwesomeIcons.user),
                 text: "Use email & password",
                 onTapFunction: _onEmailLoginTap,

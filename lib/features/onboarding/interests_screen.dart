@@ -58,6 +58,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
   bool _showTitle = false;
 
   void _onScroll() {
+    //scrollController에 이벤트리스너를 달아서 항상 주시하고 있다가, offset(위치)가 110을 넘어가면 상단 AppBar를 보여주는 함수
     if (_scrollController.offset > 110) {
       if (_showTitle) return;
       setState(() {
@@ -72,7 +73,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
 
   @override
   void initState() {
-    _scrollController.addListener(_onScroll);
+    _scrollController.addListener(_onScroll); //init하면서 이벤트리스너를 달아준다.
     super.initState();
   }
 
@@ -104,8 +105,11 @@ class _InterestsScreenState extends State<InterestsScreen> {
         ),
       ),
       body: Scrollbar(
-        controller: _scrollController,
+        //오른 쪽에 스크롤바를 만들어 주는 위젯
+        controller:
+            _scrollController, //컨트롤러에 이벤트리스너를 달아서 스크롤이 진행될 때마다 새로운 화면을 랜더링한다.
         child: SingleChildScrollView(
+          //페이지를 초과하는 화면을 스크롤뷰로 만들어주는 위젯
           controller: _scrollController,
           child: Padding(
             padding: const EdgeInsets.only(
@@ -133,6 +137,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                 ),
                 Gaps.v64,
                 Wrap(
+                  // interest들의 크기를 감싸주는 위젯
                   runSpacing: 20,
                   spacing: 20,
                   children: [
