@@ -31,7 +31,8 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   }
 
   void _onVideoFinished() {
-    _pageController.nextPage(duration: _scrollDuration, curve: _scrollCurve);
+    return;
+    //  _pageController.nextPage(duration: _scrollDuration, curve: _scrollCurve);
   }
 
   @override
@@ -40,19 +41,34 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
     super.dispose();
   }
 
+  Future<void> _onRefresh() {
+    //새로고침 시 작동하는 함수 원래 API를 호출해야 하지만 임시로 delayed를 반환하여 5초간 작동 후 리턴한다.
+    return Future.delayed(
+      const Duration(seconds: 5),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      /*ListBuilder과 같이 필요할 때마다 PageView를 빌드해주는 함수. 영상을 한번에 불러오면 과부하를 불러 일으킨다.
-       빌더를 활용하면 그떄그때 영상을 렌더링하기 떄문에 성능에 효과적 */
-      scrollDirection: Axis.vertical,
-      controller: _pageController,
-      itemCount: _itemCount,
-      onPageChanged: _onPageChanged,
-      itemBuilder: (context, index) => VideoPost(
-        onVideoFinished:
-            _onVideoFinished, //pageController를 활용하기 위해 onVideoFinished를 넘겨준다.
-        index: index,
+    return RefreshIndicator(
+      // 화면을 아래로 끌어내렸을 때 상단에 리프레쉬 버튼이 나타나면서 새로고침해주는 위젯
+      onRefresh: _onRefresh, // future를 반환해야 함. 새로고침 시 수행할 활동.
+      displacement: 50, // 새로고침 버튼이 어디서 돌아가고 있을지
+      edgeOffset: 20, // 새로고침 버튼이 어디서부터 시작할지
+      color: Theme.of(context).primaryColor, // 새로고침 화살표의 색깔
+      strokeWidth: 3, //화살표의 굵기
+      child: PageView.builder(
+        /*ListBuilder과 같이 필요할 때마다 PageView를 빌드해주는 함수. 영상을 한번에 불러오면 과부하를 불러 일으킨다.
+         빌더를 활용하면 그떄그때 영상을 렌더링하기 떄문에 성능에 효과적 */
+        scrollDirection: Axis.vertical,
+        controller: _pageController,
+        itemCount: _itemCount,
+        onPageChanged: _onPageChanged,
+        itemBuilder: (context, index) => VideoPost(
+          onVideoFinished:
+              _onVideoFinished, //pageController를 활용하기 위해 onVideoFinished를 넘겨준다.
+          index: index,
+        ),
       ),
     );
   }
