@@ -2,13 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/inbox/activity_screen.dart';
+import 'package:tiktok_clone/features/inbox/chats_screen.dart';
 
-class InboxScreen extends StatelessWidget {
+class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
 
-  void _onDmPressed() {}
+  @override
+  State<InboxScreen> createState() => _InboxScreenState();
+}
 
-  void _onActivityTap(BuildContext context) {
+class _InboxScreenState extends State<InboxScreen> {
+  void _onDmPressed() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const ChatsScreen(),
+      ),
+    );
+  }
+
+  void _onActivityTap() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const ActivityScreen(),
@@ -35,7 +47,7 @@ class InboxScreen extends StatelessWidget {
         children: [
           ListTile(
             // 리스트타일은 아주 활용도가 높은 위젯. 꼭 복습해보자.
-            onTap: () => _onActivityTap(context), // 함수도 바로 넣을 수 있고
+            onTap: _onActivityTap, // 함수도 바로 넣을 수 있고
             title: const Text(
               //타이틀을 설정할 수도
               'Activity',
