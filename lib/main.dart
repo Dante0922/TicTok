@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
 
-void main() {
+void main() async {
+  //Flutter엔진과 framework를 묶는 접착제
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Orientation을 portraitUp으로 고정한다.
+  await SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  );
+  // 상단 시간, 와이파이, 배터리 등의 색상을 dart/white로 바꾼다.
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle.dark,
+  );
+
   runApp(const TicTokApp());
 }
 
@@ -13,6 +26,7 @@ class TicTokApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'TicTok Clone',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
@@ -36,6 +50,32 @@ class TicTokApp extends StatelessWidget {
         ),
       ),
       home: const MainNavigationScreen(),
+    );
+  }
+}
+
+class LayoutBuilderCodeLab extends StatelessWidget {
+  const LayoutBuilderCodeLab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: SizedBox(
+        width: size.width / 2,
+        child: LayoutBuilder(
+          // LayoutBuilder는 부모의 크기를 반환해준다.
+          // MediaQuery와 혼동하지 말 것!!
+          builder: (context, constraints) => Container(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight,
+            color: Colors.teal,
+            child: Center(
+              child: Text("${size.width} / ${constraints.maxWidth}"),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

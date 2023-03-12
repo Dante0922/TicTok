@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
@@ -53,12 +54,19 @@ class _VideoPostState extends State<VideoPost>
     await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping(true); //비디오가 무한 반복되도록 설정
     _videoPlayerController.addListener(_onVideoChange);
+    if (kIsWeb) {
+      // k를 붙이면 framework가 제공하는 constant들을 확인할 수 있다.
+      // 대부분의 웹에서는 영상+소리가 자동재생되는 것을 금지하고 있다.
+      // 사용자에게 불쾌한 경험을 끼칠 수 있기 때문. web이라면 volume를 0으로 줄여서 방지하자.
+      await _videoPlayerController.setVolume(0);
+    }
     setState(() {});
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
     //info를 통해 현재 보이는 화면의 visibleFraction이 1이 되면(전체가 다 보이면)
     //영상을 작동시키는 메소드
+    if (!mounted) return; //mounted란 위젯이 트리에 존재하는지 확인하는 것. 존재한다면 True
     if (info.visibleFraction == 1 &&
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
