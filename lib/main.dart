@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
 
 void main() async {
   //Flutter엔진과 framework를 묶는 접착제
@@ -28,13 +28,56 @@ class TicTokApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'TicTok Clone',
+      themeMode: ThemeMode.system, // 시스템의 화이트/다크 모드에 따라 앱의 모드 변경
+
       theme: ThemeData(
+        brightness: Brightness.light,
         scaffoldBackgroundColor: Colors.white,
+        // bottomAppBarTheme: BottomAppBarTheme(
+        // 모든 바텀앱바의 띰을 설정할 수 있음.
+        //   color: Colors.grey.shade50,
+        // ),
+        // textTheme: TextTheme(
+        //   // metarial 사이트에서 원하는 textTheme를 한번에 불러올 수 있다.
+        //   // 노마드 틱톡강의 15.2 참고
+        //   displayLarge: GoogleFonts.openSans(
+        //       fontSize: 94, fontWeight: FontWeight.w300, letterSpacing: -1.5),
+        //   displayMedium: GoogleFonts.openSans(
+        //       fontSize: 59, fontWeight: FontWeight.w300, letterSpacing: -0.5),
+        //   displaySmall:
+        //       GoogleFonts.openSans(fontSize: 47, fontWeight: FontWeight.w400),
+        //   headlineMedium: GoogleFonts.openSans(
+        //       fontSize: 33, fontWeight: FontWeight.w400, letterSpacing: 0.25),
+        //   headlineSmall:
+        //       GoogleFonts.openSans(fontSize: 24, fontWeight: FontWeight.w400),
+        //   titleLarge: GoogleFonts.openSans(
+        //       fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: 0.15),
+        //   titleMedium: GoogleFonts.openSans(
+        //       fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.15),
+        //   titleSmall: GoogleFonts.openSans(
+        //       fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1),
+        //   bodyLarge: GoogleFonts.roboto(
+        //       fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.5),
+        //   bodyMedium: GoogleFonts.roboto(
+        //       fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25),
+        //   labelLarge: GoogleFonts.roboto(
+        //       fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 1.25),
+        //   bodySmall: GoogleFonts.roboto(
+        //       fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4),
+        //   labelSmall: GoogleFonts.roboto(
+        //       fontSize: 10, fontWeight: FontWeight.w400, letterSpacing: 1.5),
+        // ),
+        // 구글폰트에 가서 원하는 폰트명을 GoogleFonts.폰트명TextTheme()을 통해
+        // 한번에 적용할 수 있다.
+        // textTheme: GoogleFonts.itimTextTheme(),
+        textTheme: Typography
+            .blackMountainView, // font와 색상은 제공하지만 weight, height, space, size 등은 지정 안 함.
         primaryColor: const Color(0xFFE9435A),
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color(
               0xFFE9435A), //쿠퍼티노서치 같은 위젯은 기본 커서컬러가 안 바뀌지만, main.dart에서 이런 방식으로 기본 색상을 지정해줄 순 있다.
         ),
+
         splashColor:
             Colors.transparent, //버튼을 눌렀을 때 퍼지는 Splash효과를 막고 싶다면 이 옵션을 지정해주면 된다.
         // highlightColor: Colors.transparent,  꾹 눌렀을 때 나타나는 색상변화를 없애고 싶다면 이 옵션을 설정.
@@ -49,7 +92,24 @@ class TicTokApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MainNavigationScreen(),
+      darkTheme: ThemeData(
+          // Theme을 설정하듯 dark모드 theme도 설정할 수 있다.
+          brightness: Brightness.dark, // 기본 글씨체를 지정하는 옵션
+          // 구글폰트.Theme에 Dark모드의 brightness를 적용해줄 수도 있다.
+          // 단, 많은 폰트가 있지만 모든 폰트가 있는 것은 아니다.
+          // textTheme: GoogleFonts.itimTextTheme(
+          //     ThemeData(brightness: Brightness.dark).textTheme),
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.grey.shade900,
+          ),
+          textTheme:
+              Typography.whiteMountainView, // font와 색상은 제공하지만 size는 지정 안 함.
+          scaffoldBackgroundColor: Colors.black,
+          primaryColor: const Color(0xFFE9435A),
+          bottomAppBarTheme: BottomAppBarTheme(
+            color: Colors.grey.shade900,
+          )),
+      home: const SignUpScreen(),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok_clone/utils.dart';
 
 // enum Page.first처럼 지정된 내역만 사용할 수 있도록 제어를 도와주는 기능.
 enum Direction { right, left }
@@ -77,7 +78,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   Text(
                     "Watch cool videos",
                     style: TextStyle(
-                      fontSize: Sizes.size40,
+                      fontSize: Sizes.size32,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -97,7 +98,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   Text(
                     "Follow the rules",
                     style: TextStyle(
-                      fontSize: Sizes.size40,
+                      fontSize: Sizes.size32,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -114,12 +115,13 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   ? CrossFadeState.showFirst
                   : CrossFadeState.showSecond,
               duration: const Duration(
-                milliseconds: 1000,
+                milliseconds: 300,
               ),
             ),
           ),
         ),
         bottomNavigationBar: BottomAppBar(
+          color: isDarkMode(context) ? Colors.black : Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: Sizes.size24,
