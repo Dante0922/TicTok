@@ -1,0 +1,12 @@
+arb-dir: lib/intl # 번역에 필요한 파일들의 위치
+template-arb-file: intl_en.arb  # 마스터파일 - 기본 언어?
+output-localization-file: intl_generated.dart # 생성된 코드가 갈 곳
+
+
+# Localization 방법
+# 1. pubspec.yaml 에서 flutter:  generate: true 
+# 2. l10n.yaml 생성 및 정보 기입
+# 3. 지정한 폴더에 번역할 파일 생성
+# 4. flutter-gen-l10n 터미널에 실행
+# 5. main.dart에 import "package:flutter_gen/gen_l10n/intl_generated.dart"; 임포트
+# 6. main.dart에     localizationsDelegates: const [ AppLocalizations.delegate,] 추가

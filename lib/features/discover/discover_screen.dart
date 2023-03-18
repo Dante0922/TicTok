@@ -3,6 +3,7 @@ import 'package:tiktok_clone/constants/breakpoints.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:tiktok_clone/utils.dart';
 
 final tabs = [
   "Top",
@@ -80,10 +81,14 @@ class _DiscoverScreenState extends State<DiscoverScreen>
         resizeToAvoidBottomInset: false, // 키보드를 열면 스캐폴드가 자동으로 리사이징하는 것을 방지.
         appBar: AppBar(
           elevation: 1,
-          // title: CupertinoSearchTextField(    //애플 방식의 서치바
+          // title: CupertinoSearchTextField(
+          //   //애플 방식의 서치바
           //   controller: _textEditingController,
-          //   onChanged: _onSearchChanged,  //글이 바뀔 대마다 실행
-          //   onSubmitted: _onSearchSubmitted,  // 제출될 때마다 실행
+          //   onChanged: _onSearchChanged, //글이 바뀔 대마다 실행
+          //   onSubmitted: _onSearchSubmitted, // 제출될 때마다 실행
+          //   style: TextStyle(
+          //     color: isDarkMode(context) ? Colors.white : Colors.black,
+          //   ),
           // ),
           title: ConstrainedBox(
             // 검색창의 반응형웹 변경을 위해 ConstrainedBox를 통해 최대 크기를 정해줄 수 있다.
@@ -105,20 +110,26 @@ class _DiscoverScreenState extends State<DiscoverScreen>
                       controller: _textEditingController,
                       onChanged: _onSearchChanged,
                       onSubmitted: _onSearchSubmitted,
+                      style: TextStyle(
+                        color:
+                            isDarkMode(context) ? Colors.white : Colors.black,
+                      ),
                       expands: true,
                       minLines: null,
                       maxLines: null,
                       decoration: InputDecoration(
                         hintText: "Search",
                         border: OutlineInputBorder(
-                          // 인풋박스테투리 위젯
+                          // 인풋박스 테투리 위젯
                           borderRadius: BorderRadius.circular(
                             Sizes.size8,
                           ),
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade200,
+                        fillColor: isDarkMode(context)
+                            ? Colors.grey.shade600
+                            : Colors.grey.shade200,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: Sizes.size5,
                           vertical: Sizes.size5,
@@ -170,9 +181,8 @@ class _DiscoverScreenState extends State<DiscoverScreen>
             ),
             isScrollable: true, //탭바의 스크롤 기능
             splashFactory: NoSplash.splashFactory, //탭바를 눌렀을 때 이펙트
-            unselectedLabelColor: Colors.grey.shade500, // 선택안 된 바의 색상
-            labelColor: Colors.black, // 선택된 바의 색상
-            indicatorColor: Colors.black, // 선택됐을 때 하단 표시구분의 색상
+            indicatorColor: Theme.of(context).tabBarTheme.indicatorColor,
+
             labelStyle: const TextStyle(
               // 라벨(탭명)의 색상
               fontWeight: FontWeight.w600,
@@ -235,19 +245,22 @@ class _DiscoverScreenState extends State<DiscoverScreen>
                     style: TextStyle(
                       fontSize: Sizes.size16 + Sizes.size2,
                       fontWeight: FontWeight.bold,
+                      height: 1, // 글씨 상하 간격
                     ),
                     maxLines: 2, // 텍스트 위젯의 최대 라인 제약 기능.
                     overflow: TextOverflow
                         .ellipsis, // 출력 결과를 초과하는 값에 대해 처리하는 옵션. 이 옵션은 ...으로 표기
                   ),
                   Gaps.v8,
-                  if (constraints.maxWidth < 200 || constraints.maxWidth > 250)
+                  if (constraints.maxWidth < 100 || constraints.maxWidth > 150)
                     // 각 Container는 Web의 크기와 상관없이 작을 수 있다. 이럴 경우 LayoutBuiler를 통해
                     // 세부 내용을 조절해주는 것이 좋다.
                     DefaultTextStyle(
                       // 자식들의 모든 TextStyle를 지정하는 위젯
                       style: TextStyle(
-                        color: Colors.grey.shade600,
+                        color: isDarkMode(context)
+                            ? Colors.grey.shade300
+                            : Colors.grey.shade600,
                         fontWeight: FontWeight.w600,
                       ),
                       child: Row(

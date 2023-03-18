@@ -6,6 +6,7 @@ import 'package:tiktok_clone/features/authentication/email_screen.dart';
 import 'widgets/form_button.dart';
 
 class UsernameScreen extends StatefulWidget {
+  static String routeName = "/username";
   const UsernameScreen({super.key});
 
   @override
@@ -35,11 +36,17 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const EmailScreen(),
-      ),
-    );
+    // pushNamed로 args를 전달하는 방법...
+    // EmailScreenArgs class를 만들어서 전달한다..
+    Navigator.pushNamed(context, EmailScreen.routeName,
+        arguments: EmailScreenArgs(username: _username));
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (context) => EmailScreen(
+    //       userName: _username,
+    //     ),
+    //   ),
+    // );
   }
 
   @override
