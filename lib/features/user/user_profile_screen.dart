@@ -7,7 +7,13 @@ import 'package:tiktok_clone/features/settings/settings_screen.dart';
 import 'package:tiktok_clone/features/user/widgets/persistent_tab_bar.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({super.key});
+  const UserProfileScreen({
+    super.key,
+    required this.username,
+    required this.tab,
+  });
+  final String username;
+  final String tab;
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -29,6 +35,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           constraints: const BoxConstraints(maxWidth: Breakpoints.xl),
           child: SafeArea(
             child: DefaultTabController(
+              initialIndex: widget.tab == "likes" ? 1 : 0,
               length: 2,
               child: NestedScrollView(
                 // NestedScrollView 는 중첩된 스크롤뷰를 하나의 스크롤처럼 만들어 준다.
@@ -39,7 +46,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   return [
                     //Slvier끼리는 부모자식 관계가 되지 못한다. 형제 관계로 []안에 넣어주어야 함.
                     SliverAppBar(
-                      title: const Text("크림"),
+                      title: Text(widget.username),
                       actions: [
                         IconButton(
                           onPressed: _onGearPressed,
@@ -63,16 +70,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           Gaps.v20,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Text(
-                                "@크림",
-                                style: TextStyle(
+                                "@${widget.username}",
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: Sizes.size16,
                                 ),
                               ),
                               Gaps.h5,
-                              FaIcon(
+                              const FaIcon(
                                 FontAwesomeIcons.solidCircleCheck,
                                 size: Sizes.size16,
                                 color: Colors.blue,

@@ -3,11 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 
 import "package:flutter_localizations/flutter_localizations.dart";
-import 'package:tiktok_clone/features/authentication/email_screen.dart';
-import 'package:tiktok_clone/features/authentication/login_screen.dart';
-import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
-import 'package:tiktok_clone/features/authentication/username_screen.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
+import 'package:tiktok_clone/router.dart';
 
 void main() async {
   //Flutter엔진과 framework를 묶는 접착제
@@ -32,7 +29,9 @@ class TicTokApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // S.load(const Locale("en")); // 앱의 언어 설정을 원하는 값으로 변경한다.
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig:
+          router, // Go_Router를 사용하기 위해 MaterialApp.router + routeConfig를 설정해주자.
       debugShowCheckedModeBanner: false,
       title: 'TicTok Clone',
       themeMode: ThemeMode.system, // 시스템의 화이트/다크 모드에 따라 앱의 모드 변경
@@ -168,14 +167,14 @@ class TicTokApp extends StatelessWidget {
             color: Colors.grey.shade900,
           )),
       //home: const SignUpScreen(),
-      initialRoute: SignUpScreen.routeName,
-      routes: {
-        // 실수를 방지하기 위해 static 변수를 정의해서 사용
-        SignUpScreen.routeName: (context) => const SignUpScreen(),
-        UsernameScreen.routeName: (context) => const UsernameScreen(),
-        LoginScreen.routeName: (context) => const LoginScreen(),
-        EmailScreen.routeName: (context) => const EmailScreen(),
-      },
+      // initialRoute: SignUpScreen.routeName,
+      // routes: {
+      //   // 실수를 방지하기 위해 static 변수를 정의해서 사용
+      //   SignUpScreen.routeName: (context) => const SignUpScreen(),
+      //   UsernameScreen.routeName: (context) => const UsernameScreen(),
+      //   LoginScreen.routeName: (context) => const LoginScreen(),
+      //   EmailScreen.routeName: (context) => const EmailScreen(),
+      // },
     );
   }
 }

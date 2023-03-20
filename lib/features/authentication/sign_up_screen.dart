@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/authentication/login_screen.dart';
 
 import 'package:tiktok_clone/features/authentication/username_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/auth_button.dart';
@@ -10,7 +12,8 @@ import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:tiktok_clone/utils.dart';
 
 class SignUpScreen extends StatelessWidget {
-  static String routeName = "/";
+  static String routeURL = "/";
+  static String routeName = "signUp";
   const SignUpScreen({super.key});
 
   void _onloginTap(BuildContext context) {
@@ -19,7 +22,7 @@ class SignUpScreen extends StatelessWidget {
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(seconds: 1),
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const UsernameScreen(),
+              const LoginScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             final offsetAnimation = Tween(
               begin: const Offset(0, -1),
@@ -41,9 +44,11 @@ class SignUpScreen extends StatelessWidget {
   }
 
   void _onEmailTap(BuildContext context) {
-    Navigator.of(context).pushNamed(
-      UsernameScreen.routeName, // 실수를 방지하기 위해 static 변수를 정의해서 사용
-    );
+    context.pushNamed(UsernameScreen
+        .routeName); //("/users/cream?show=likes"); // context.go는 모든 스택을 무시한다.
+    // Navigator.of(context).pushNamed(
+    //   UsernameScreen.routeName, // 실수를 방지하기 위해 static 변수를 정의해서 사용
+    // );
     // Navigator.of(context).push(
     //   MaterialPageRoute(
     //     builder: (context) => const UsernameScreen(),
