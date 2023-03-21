@@ -177,17 +177,17 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     );
   }
 
-  // void _onDragButton(DragUpdateDetails details) {
-  //   if (details.primaryDelta! < 0) {
-  //     if (zoomLv >= 129.0) return;
-  //     zoomLv = zoomLv + 0.5;
-  //     _cameraController.setZoomLevel(zoomLv);
-  //   } else if (details.primaryDelta! > 0) {
-  //     if (zoomLv <= 1.0) return;
-  //     zoomLv = zoomLv - 0.5;
-  //     _cameraController.setZoomLevel(zoomLv);
-  //   }
-  // }
+  void _onDragButton(DragUpdateDetails details) {
+    if (details.primaryDelta! < 0) {
+      if (zoomLv >= 129.0) return;
+      zoomLv = zoomLv + 0.5;
+      _cameraController.setZoomLevel(zoomLv);
+    } else if (details.primaryDelta! > 0) {
+      if (zoomLv <= 1.0) return;
+      zoomLv = zoomLv - 0.5;
+      _cameraController.setZoomLevel(zoomLv);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
