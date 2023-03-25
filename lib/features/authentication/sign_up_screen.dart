@@ -17,35 +17,43 @@ class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
   void _onloginTap(BuildContext context) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-          transitionDuration: const Duration(seconds: 1),
-          reverseTransitionDuration: const Duration(seconds: 1),
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const LoginScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final offsetAnimation = Tween(
-              begin: const Offset(0, -1),
-              end: Offset.zero,
-            ).animate(animation);
-            final opacityAnimation = Tween(
-              begin: 0.5,
-              end: 1.0,
-            ).animate(animation);
-            return SlideTransition(
-              position: offsetAnimation,
-              child: FadeTransition(
-                opacity: opacityAnimation,
-                child: child,
-              ),
-            );
-          }),
-    );
+    context.pushNamed(LoginScreen.routeName);
+    // Navigator.of(context).push(
+    //   PageRouteBuilder(
+    //       transitionDuration: const Duration(seconds: 1),
+    //       reverseTransitionDuration: const Duration(seconds: 1),
+    //       pageBuilder: (context, animation, secondaryAnimation) =>
+    //           const LoginScreen(),
+    //       transitionsBuilder: (context, animation, secondaryAnimation, child) {
+    //         final offsetAnimation = Tween(
+    //           begin: const Offset(0, -1),
+    //           end: Offset.zero,
+    //         ).animate(animation);
+    //         final opacityAnimation = Tween(
+    //           begin: 0.5,
+    //           end: 1.0,
+    //         ).animate(animation);
+    //         return SlideTransition(
+    //           position: offsetAnimation,
+    //           child: FadeTransition(
+    //             opacity: opacityAnimation,
+    //             child: child,
+    //           ),
+    //         );
+    //       }),
+    // );
   }
 
   void _onEmailTap(BuildContext context) {
-    context.pushNamed(UsernameScreen
-        .routeName); //("/users/cream?show=likes"); // context.go는 모든 스택을 무시한다.
+    Navigator.push(
+      // url을 표기하지 원치 않는 위젯은 Navigator을 활용하자.
+      context,
+      MaterialPageRoute(
+        builder: (context) => const UsernameScreen(),
+      ),
+    );
+    // context.pushNamed(UsernameScreen
+    //     .routeName); //("/users/cream?show=likes"); // context.go는 모든 스택을 무시한다.
     // Navigator.of(context).pushNamed(
     //   UsernameScreen.routeName, // 실수를 방지하기 위해 static 변수를 정의해서 사용
     // );

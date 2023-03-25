@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/onboarding/interests_screen.dart';
@@ -35,12 +36,14 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
   void _onNextTap() {
     //Navigator함수를 통해 다른 화면으로 보낼 수 있다.  push와 pushAndRemoveUntil, Pop이 있는데, Push는 하나의 새로운 화면 스택을 생성해 뒤로갈 수 있고, Pop는 현재 화면을 삭제해서 뒤로 보낸다.
     //PushAndRemoveUntil은 현재까지의 모든 Push화면을 삭제하고 뒤로갈 수 없는 새로운 화면을 띄운다.
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => const InterestsScreen(),
-        ), (route) {
-      return false;
-    });
+    // Navigator.of(context).pushAndRemoveUntil(
+    //     MaterialPageRoute(
+    //       builder: (context) => const InterestsScreen(),
+    //     ), (route) {
+    //   return false;
+    // });
+    context.pushReplacementNamed(
+        InterestsScreen.routeName); // 지난 화면들을 다 없애고 새로운 화면만 남겨둔다.
   }
 
   void _setTextFieldDate(DateTime date) {

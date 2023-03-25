@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/email_screen.dart';
@@ -7,8 +6,6 @@ import 'package:tiktok_clone/features/authentication/email_screen.dart';
 import 'widgets/form_button.dart';
 
 class UsernameScreen extends StatefulWidget {
-  static String routeURL = "username";
-  static String routeName = "username";
   const UsernameScreen({super.key});
 
   @override
@@ -38,13 +35,20 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
+    // context.pushNamed(
+    //   EmailScreen.routeName,
+    //   extra: EmailScreenArgs(username: _username),
+    // );
     // pushNamed로 args를 전달하는 방법...
     // EmailScreenArgs class를 만들어서 전달한다..
     // Navigator.pushNamed(context, EmailScreen.routeName,
     //     arguments: EmailScreenArgs(username: _username));
-    context.pushNamed(
-      EmailScreen.routeName,
-      extra: EmailScreenArgs(username: _username),
+    Navigator.push(
+      // url 없이 이동
+      context,
+      MaterialPageRoute(
+        builder: (context) => EmailScreen(username: _username),
+      ),
     );
     // Navigator.of(context).push(
     //   MaterialPageRoute(

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/common/widgets/main_navigation/widgets/video_config/video_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/videos/widgets/video_button.dart';
@@ -118,6 +119,7 @@ class _VideoPostState extends State<VideoPost>
   @override
   void dispose() {
     _videoPlayerController.dispose(); //컨트롤러는 항상 dispose
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -139,6 +141,12 @@ class _VideoPostState extends State<VideoPost>
 
   @override
   Widget build(BuildContext context) {
+    final videoConfig = context.dependOnInheritedWidgetOfExactType<
+        VideoConfigData>(); // 가장 위에 있는 VideoConfig에 다이렉트로 접근할 수 있도록 해준다. 방법 중 하나지만 피곤하다.
+    final videoConfig2 = VideoConfigData.of(context).autoMute;
+    print("stst");
+    print(VideoConfigData.of(context).autoMute);
+    print("ttt");
     return VisibilityDetector(
       //보이는 정도를 추적할 수 있는 위젯
       key: Key("${widget.index}"),
@@ -228,6 +236,17 @@ class _VideoPostState extends State<VideoPost>
                   ],
                 )
               ],
+            ),
+          ),
+          Positioned(
+            left: 40,
+            top: 40,
+            child: IconButton(
+              icon: FaIcon(VideoConfigData.of(context).autoMute
+                  ? FontAwesomeIcons.volumeOff
+                  : FontAwesomeIcons.volumeHigh),
+              color: Colors.white,
+              onPressed: VideoConfigData.of(context).toggleMuted,
             ),
           ),
           Positioned(

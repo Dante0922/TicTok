@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/features/onboarding/interests_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
@@ -23,14 +24,15 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       if (_formKey.currentState!.validate()) {
         //각 Form의 validator가 null의 반환할 경우 Validate가 통과한 것으로 본다. 다른 값이 있다면 검증 실패로 본다.
         _formKey.currentState!.save(); //각 Form의 onsaved를 실행한다.
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const InterestsScreen(),
-          ),
-          (route) {
-            return false;
-          },
-        );
+        context.goNamed(InterestsScreen.routeName);
+        // Navigator.of(context).pushAndRemoveUntil(
+        //   MaterialPageRoute(
+        //     builder: (context) => const InterestsScreen(),
+        //   ),
+        //   (route) {
+        //     return false;
+        //   },
+        // );
       }
     }
   }
@@ -87,6 +89,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                 ),
                 Gaps.v16,
                 TextFormField(
+                  obscureText: true,
                   decoration: InputDecoration(
                     hintText: "Password",
                     enabledBorder: UnderlineInputBorder(
@@ -102,7 +105,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                   ),
                   validator: (value) {
                     if (value != null && value.isEmpty) {
-                      return "Please write your email";
+                      return "Please write your password";
                     }
                     return null;
                   },
