@@ -14,7 +14,11 @@ class SignUpViewModel extends AsyncNotifier<void> {
 
   Future<void> signUp() async {
     state = const AsyncValue.loading();
+
     final form = ref.read(signUpForm);
+    print(form);
+    print(form["email"]);
+    print(form["password"]);
     state = await AsyncValue.guard(
       // guard는 state에 이상이 있으면 이상을, 없으면 정상값을 넣어준다.
       () async => await _authRepo.signUp(
@@ -22,6 +26,7 @@ class SignUpViewModel extends AsyncNotifier<void> {
         form["password"],
       ),
     );
+    print(state);
   }
 }
 
