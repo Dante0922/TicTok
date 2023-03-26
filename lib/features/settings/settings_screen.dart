@@ -1,29 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tiktok_clone/common/widgets/main_navigation/widgets/video_config/video_config.dart';
 import 'package:tiktok_clone/constants/breakpoints.dart';
+import 'package:tiktok_clone/features/videos/view_models/playback_config_vm.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerWidget {
+  // RiverPod 접근 순서 1:  extends ConsumerWidget로 확장자 설정
   const SettingsScreen({super.key});
 
+  // UI와 Business 로직은 분리되어야 한다. STL 위젯으로 바꿀 것
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  bool _notifications = false;
-
-  void _onNotificationsChanged(bool? newValue) {
-    if (newValue == null) return;
-    setState(() {
-      _notifications = newValue;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // RiverPod 접근 순서 2: 빌드에 WidgetRef 추가
     return Localizations.override(
       // 강제로 해당 화면의 언어를 바꿔주는 위젯
       context: context,
@@ -37,50 +27,123 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             body: ListView(
               children: [
+                SwitchListTile.adaptive(
+                  value: ref
+                      .watch(playbackConfigProvider)
+                      .muted, // RiverPod 접근 순서 3: ref.~으로 변수 호출
+                  onChanged: (value) {
+                    ref.read(playbackConfigProvider.notifier).setMuted(
+                        value); // RiverPod 접근 순서 4: Provider.notifier으로 함수 호출
+                  },
+                  title: const Text("autoMute 방식3"),
+                  subtitle: const Text("뮤트"),
+                ),
+                SwitchListTile.adaptive(
+                  value: ref.watch(playbackConfigProvider).autoplay,
+                  onChanged: (value) {
+                    ref
+                        .read(playbackConfigProvider.notifier)
+                        .setAutoplay(value);
+                  },
+                  title: const Text("자동재생"),
+                  subtitle: const Text("자동재생"),
+                ),
+                // SwitchListTile.adaptive(
+                //   value: context.watch<PlaybackConfigViewModel>().muted,
+                //   onChanged: (value) =>
+                //       context.read<PlaybackConfigViewModel>().setMuted(value),
+                //   title: const Text("autoMute 방식3"),
+                //   subtitle: const Text("뮤트"),
+                // ),
+                // SwitchListTile.adaptive(
+                //   value: context.watch<PlaybackConfigViewModel>().autoplay,
+                //   onChanged: (value) => context
+                //       .read<PlaybackConfigViewModel>()
+                //       .setAutoplay(value),
+                //   title: const Text("자동재생"),
+                //   subtitle: const Text("자동재생"),
+                // ),
+                // SwitchListTile.adaptive(
+                //   value: context.watch<VideoConfig>().isMuted,
+                //   onChanged: (value) =>
+                //       context.read<VideoConfig>().toggleIsMuted(),
+                //   title: const Text("autoMute 방식2"),
+                //   subtitle: const Text("뮤트"),
+                // ),
+                // SwitchListTile.adaptive(
+                //   value: context.watch<DarkModeConfig>().isDarkMode,
+                //   onChanged: (value) =>
+                //       context.read<DarkModeConfig>().toggleIsDarkMode(),
+                //   title: const Text("다크모드"),
+                //   subtitle: const Text("다크모드"),
+                // ),
+                // ValueListenableBuilder(
+                //   valueListenable: darkModeConfig,
+                //   builder: (context, value, child) => SwitchListTile.adaptive(
+                //     value: value,
+                //     onChanged: (value) {
+                //       darkModeConfig.value = !darkModeConfig.value;
+                //     },
+                //     title: const Text("dark Mode"),
+                //     subtitle: const Text("다크모드 전환"),
+                //   ),
+                // ),
+                // AnimatedBuilder(
+                //   // animatedBuilder과 SwitchListTile 을 같이 사용한다.. 공식문서 참조.
+                //   animation: videoConfig,
+                //   builder: (context, child) => SwitchListTile.adaptive(
+                //     value: videoConfig.value,
+                //     onChanged: (value) {
+                //       videoConfig.value = !videoConfig.value;
+                //     },
+                //     title: const Text("mute video"),
+                //     subtitle: const Text("Videos will be muted by default."),
+                //   ),
+                // ),
                 Switch.adaptive(
                   // 플랫폼에 따라 모양이 변경되는 스위치
-                  value: _notifications,
-                  onChanged: _onNotificationsChanged,
+                  value: false,
+                  onChanged: (value) {},
                 ),
                 CupertinoSwitch(
-                  value: _notifications,
-                  onChanged: _onNotificationsChanged,
+                  value: false,
+                  onChanged: (value) {},
                 ),
                 Switch(
                   // 스위치 위젯
-                  value: _notifications,
-                  onChanged: _onNotificationsChanged,
+                  value: false,
+                  onChanged: (value) {},
                 ),
-                SwitchListTile.adaptive(
-                  value: VideoConfigData.of(context).autoMute,
-                  onChanged: (value) {
-                    VideoConfigData.of(context).toggleMuted();
-                  },
-                  title: const Text("Auto Mute"),
-                  subtitle: const Text("Videos will be muted by default."),
-                ),
+                // SwitchListTile.adaptive(
+                //   value: VideoConfigData.of(context).autoMute,
+                //   onChanged: (value) {
+                //     VideoConfigData.of(context).toggleMuted();
+                //   },
+                //   title: const Text("Auto Mute"),
+                //   subtitle: const Text("Videos will be muted by default."),
+                // ),
                 SwitchListTile.adaptive(
                   // 플랫폼에 따라 Tile 형태가 변경되는 위젯
                   // 매우매우 유용하다!!
-                  value: _notifications,
-                  onChanged: _onNotificationsChanged,
+                  value: false,
+                  onChanged: (value) {},
                   title: const Text("adaptive"),
                   subtitle: const Text("very cool"),
                 ),
                 SwitchListTile(
-                  value: _notifications,
-                  onChanged: _onNotificationsChanged,
+                  value: false,
+                  onChanged: (value) {},
                   title: const Text("Enable notifications"),
                 ),
                 Checkbox(
                   //체크박스 위젯
-                  value: _notifications,
-                  onChanged: _onNotificationsChanged,
+                  value: false,
+                  onChanged: (value) {},
                 ),
                 CheckboxListTile(
                   // 체크박스를 만드는 위젯
-                  value: _notifications,
-                  onChanged: _onNotificationsChanged,
+                  value: false,
+                  onChanged: (value) {},
                   title: const Text("Enable notifications"),
                   checkColor: Colors.white,
                   activeColor: Colors.black,
@@ -107,7 +170,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     if (kDebugMode) {
                       print(time);
                     }
-                    if (!mounted) return;
+
                     final booking = await showDateRangePicker(
                       // Airbnb처럼 시작일-종료일을 선택해야할 떄 유용한 함수
                       context: context,

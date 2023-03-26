@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/birthday_screen.dart';
+import 'package:tiktok_clone/features/authentication/view_models/signup_view_model.dart';
 
 import 'widgets/form_button.dart';
 
-class PasswordScreen extends StatefulWidget {
+class PasswordScreen extends ConsumerStatefulWidget {
   const PasswordScreen({super.key});
 
   @override
-  State<PasswordScreen> createState() => _PasswordScreenState();
+  ConsumerState<PasswordScreen> createState() => _PasswordScreenState();
 }
 
-class _PasswordScreenState extends State<PasswordScreen> {
+class _PasswordScreenState extends ConsumerState<PasswordScreen> {
   //상태 변경을 체크하기 위해 컨트롤러를 생성
   final TextEditingController _passwordController = TextEditingController();
 
@@ -43,6 +45,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
   void _onSubmit() {
     if (!_isPasswordValid()) return;
+    final state = ref.read(signUpForm.notifier).state;
+    ref.read(signUpForm.notifier).state = {
+      ...state,
+      "password": _password
+    }; // email을 담고 있는 state를 덧씌워준다.
 
     Navigator.push(
       context,

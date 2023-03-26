@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tiktok_clone/common/widgets/main_navigation/widgets/video_config/video_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/videos/widgets/video_button.dart';
-import 'package:tiktok_clone/features/videos/widgets/video_comments.dart';
+import 'package:tiktok_clone/features/videos/view_models/playback_config_vm.dart';
+import 'package:tiktok_clone/features/videos/views/widgets/video_button.dart';
+import 'package:tiktok_clone/features/videos/views/widgets/video_comments.dart';
+
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class VideoPost extends StatefulWidget {
+class VideoPost extends ConsumerStatefulWidget {
   final Function onVideoFinished;
   //onVideoFinished 함수는 state가 아닌 Widget으로 넘겨받았다.
   //이를 아래 state에서 쓰고 싶다면 widget.onVideoFinish로 사용할 수 있다.
@@ -23,10 +25,10 @@ class VideoPost extends StatefulWidget {
   });
 
   @override
-  State<VideoPost> createState() => _VideoPostState();
+  VideoPostState createState() => VideoPostState();
 }
 
-class _VideoPostState extends State<VideoPost>
+class VideoPostState extends ConsumerState<VideoPost>
     with SingleTickerProviderStateMixin {
   final VideoPlayerController _videoPlayerController =
       VideoPlayerController.asset(
@@ -37,6 +39,7 @@ class _VideoPostState extends State<VideoPost>
   late final AnimationController _animationController; // 애니메이션 컨트롤러 선언
   final String _text = "크림 뒹굴뒹굴~~ 언능 건강해지자 쿨미야!!";
   bool _seeMore = false;
+  bool _isMute = false;
 
   void _onVideoChange() {
     //비디오의 길이와 현재위치(position)이 일치하면 비디오가 끝난 것으로 간주하고
@@ -72,7 +75,10 @@ class _VideoPostState extends State<VideoPost>
     if (info.visibleFraction == 1 &&
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
-      _videoPlayerController.play();
+      //   final autoplay = context.read<PlaybackConfigViewModel>().autoplay;
+      if (ref.read(playbackConfigProvider).autoplay) {
+        _videoPlayerController.play();
+      }
     }
     if (_videoPlayerController.value.isPlaying && info.visibleFraction == 0) {
       //다른 탭에 가면 비디오가 멈출 수 있도록 설정.
@@ -102,6 +108,7 @@ class _VideoPostState extends State<VideoPost>
   @override
   void initState() {
     super.initState();
+
     _initVideoPlayer();
     _animationController = AnimationController(
       //initState 하면서 컨트롤러값을 지정해준다.
@@ -114,6 +121,15 @@ class _VideoPostState extends State<VideoPost>
     // _animationController.addListener(() {
     //   setState(() {}); // 1번 방법. 애니메이션컨트롤러에 리스너를 달아 변경될 때마다 setState하여 자연스럽게 빌드한다.
     // });
+    // videoConfig.addListener(() {
+    //   setState(() {
+    //     _autoMute = videoConfig.value;
+    //   });
+    // });
+    // context
+    //     .read<PlaybackConfigViewModel>()
+    //     .addListener(_onPlaybackConfigChanged);
+    _onPlaybackConfigChanged();
   }
 
   @override
@@ -121,6 +137,24 @@ class _VideoPostState extends State<VideoPost>
     _videoPlayerController.dispose(); //컨트롤러는 항상 dispose
     _animationController.dispose();
     super.dispose();
+  }
+
+  void _onPlaybackConfigChanged({bool toggle = false}) {
+    if (!mounted) return;
+
+    _isMute = toggle
+        ? !_isMute
+        : ref
+            .read(playbackConfigProvider)
+            .muted; // context.read<PlaybackConfigViewModel>().muted;
+
+    if (_isMute) {
+      print(_isMute);
+      _videoPlayerController.setVolume(0);
+    } else {
+      _videoPlayerController.setVolume(1);
+    }
+    setState(() {});
   }
 
   void _onCommentTap(BuildContext context) async {
@@ -141,12 +175,12 @@ class _VideoPostState extends State<VideoPost>
 
   @override
   Widget build(BuildContext context) {
-    final videoConfig = context.dependOnInheritedWidgetOfExactType<
-        VideoConfigData>(); // 가장 위에 있는 VideoConfig에 다이렉트로 접근할 수 있도록 해준다. 방법 중 하나지만 피곤하다.
-    final videoConfig2 = VideoConfigData.of(context).autoMute;
-    print("stst");
-    print(VideoConfigData.of(context).autoMute);
-    print("ttt");
+    // final videoConfig = context.dependOnInheritedWidgetOfExactType<
+    //     VideoConfigData>(); // 가장 위에 있는 VideoConfig에 다이렉트로 접근할 수 있도록 해준다. 방법 중 하나지만 피곤하다.
+    //   final videoConfig2 = VideoConfigData.of(context).autoMute;
+
+    //  print(VideoConfigData.of(context).autoMute);
+
     return VisibilityDetector(
       //보이는 정도를 추적할 수 있는 위젯
       key: Key("${widget.index}"),
@@ -242,12 +276,27 @@ class _VideoPostState extends State<VideoPost>
             left: 40,
             top: 40,
             child: IconButton(
-              icon: FaIcon(VideoConfigData.of(context).autoMute
-                  ? FontAwesomeIcons.volumeOff
-                  : FontAwesomeIcons.volumeHigh),
-              color: Colors.white,
-              onPressed: VideoConfigData.of(context).toggleMuted,
-            ),
+                icon: FaIcon(//VideoConfigData.of(context).autoMute
+                    //_autoMute
+                    // context
+                    //         .watch<VideoConfig>()
+                    //         .isMuted // MultiProvider의 변수에 접근하는 방법
+                    _isMute //  context.watch<PlaybackConfigViewModel>().muted
+                        ? FontAwesomeIcons.volumeOff
+                        : FontAwesomeIcons.volumeHigh),
+                color: Colors.white,
+                onPressed: () {
+                  _onPlaybackConfigChanged(toggle: true);
+                  // _onPlaybackConfigChanged(toggle: true);
+                  // context
+                  //     .read<PlaybackConfigViewModel>()
+                  //     .setMuted(!context.read<PlaybackConfigViewModel>().muted);
+                  // context
+                  //     .read<VideoConfig>()
+                  //     .toggleIsMuted(); // MultiProvider의 함수에 접근
+                  // videoConfig.value = !videoConfig.value;
+                } // VideoConfigData.of(context).toggleMuted,
+                ),
           ),
           Positioned(
             bottom: 20,
