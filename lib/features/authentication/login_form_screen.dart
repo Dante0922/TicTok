@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
-import 'package:tiktok_clone/features/onboarding/interests_screen.dart';
+import 'package:tiktok_clone/features/authentication/view_models/login_view_model.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 
 import '../../constants/sizes.dart';
 
-class LoginFormScreen extends StatefulWidget {
+class LoginFormScreen extends ConsumerStatefulWidget {
   const LoginFormScreen({super.key});
 
   @override
-  State<LoginFormScreen> createState() => _LoginFormScreenState();
+  ConsumerState<LoginFormScreen> createState() => _LoginFormScreenState();
 }
 
-class _LoginFormScreenState extends State<LoginFormScreen> {
+class _LoginFormScreenState extends ConsumerState<LoginFormScreen> {
   final GlobalKey<FormState> _formKey =
       GlobalKey<FormState>(); //Form에 삽입된 모든 Key값을 관리하기 위한 위젯.
 
@@ -24,7 +24,12 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       if (_formKey.currentState!.validate()) {
         //각 Form의 validator가 null의 반환할 경우 Validate가 통과한 것으로 본다. 다른 값이 있다면 검증 실패로 본다.
         _formKey.currentState!.save(); //각 Form의 onsaved를 실행한다.
-        context.goNamed(InterestsScreen.routeName);
+        ref.read(loginProvider.notifier).login(
+              formData["email"]!,
+              formData["password"]!,
+              context,
+            );
+        // context.goNamed(InterestsScreen.routeName);
         // Navigator.of(context).pushAndRemoveUntil(
         //   MaterialPageRoute(
         //     builder: (context) => const InterestsScreen(),
@@ -118,7 +123,9 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                 Gaps.v28,
                 GestureDetector(
                   onTap: _onSubmitTap,
-                  child: const FormButton(disabled: false, text: "Log in"),
+                  child: FormButton(
+                      disabled: ref.watch(loginProvider).isLoading,
+                      text: "Log in"),
                 ),
               ],
             ),

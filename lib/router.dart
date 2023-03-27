@@ -12,6 +12,7 @@ import 'package:tiktok_clone/features/onboarding/interests_screen.dart';
 import 'package:tiktok_clone/features/videos/views/video_recording_screen.dart';
 
 final routerProvider = Provider((ref) {
+  //ref.watch(authState); // authState가 변경될 때 자동으로 route가 리빌드된다.
   return GoRouter(
     initialLocation: "/home",
     redirect: (context, state) {

@@ -9,12 +9,33 @@ class AuthenticationRepository {
   User? get user => _firebaseAuth.currentUser;
   bool get isLoggedIn => user != null;
 
-  Future<void> signUp(String email, String password) async {
+  // 백엔드와 UI를 연결해주는 Stream. 로그인 상태 등을 실시간으로 알 수 있다.
+  Stream<User?> authStateChanges() => _firebaseAuth.authStateChanges();
+
+  Future<void> emailSignUp(String email, String password) async {
     await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
   }
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+  }
+
+  Future<void> signIn(String email, String password) async {
+    await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+  }
+
+  Future<void> githubSignIn() async {
+    await _firebaseAuth.signInWithProvider(GithubAuthProvider());
+  }
 }
 
 final authRepo = Provider((ref) => AuthenticationRepository());
+
+final authState = StreamProvider((ref) {
+  final repo = ref.read(authRepo);
+  return repo.authStateChanges();
+});

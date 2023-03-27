@@ -42,9 +42,7 @@ class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
     //     ), (route) {
     //   return false;
     // });
-    print("동작");
-    ref.read(signUpProvider.notifier).signUp();
-    print("동잒끝");
+    ref.read(signUpProvider.notifier).signUp(context);
     //   context.pushReplacementNamed(
     //       InterestsScreen.routeName); // 지난 화면들을 다 없애고 새로운 화면만 남겨둔다.
   }
