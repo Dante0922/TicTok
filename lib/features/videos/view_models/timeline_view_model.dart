@@ -20,9 +20,9 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
   @override
   FutureOr<List<VideoModel>> build() async {
     // FutureOr을 반환하고 있다. Future or Model
-    await Future.delayed(
-      const Duration(seconds: 5),
-    );
+    //await Future.delayed(
+    //   const Duration(milliseconds: 300),
+    //  );
     //  throw Exception("OMG cant fetch");
     return _list;
   }

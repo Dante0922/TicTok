@@ -35,7 +35,7 @@ class VideoPostState extends ConsumerState<VideoPost>
           "assets/videos/IMG_9255.MOV"); //비디오를 asset으로 갖는 Controller를 만들어준다.
 
   bool _isPaused = false;
-  final Duration _animationDuration = const Duration(milliseconds: 200);
+  final Duration _animationDuration = const Duration(milliseconds: 100);
   late final AnimationController _animationController; // 애니메이션 컨트롤러 선언
   final String _text = "크림 뒹굴뒹굴~~ 언능 건강해지자 쿨미야!!";
   bool _seeMore = false;
