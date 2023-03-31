@@ -16,10 +16,13 @@ class AvatarViewModel extends AsyncNotifier<void> {
 
   Future<void> uploadAvatar(File file) async {
     state = const AsyncLoading();
-    final fileName = ref.read(authRepo).user!.uid;
+    final fileName =
+        ref.read(authRepo).user!.uid; // 파일네임은 uid로 고정. 업데이트하면 덧씌워진다.
     state = await AsyncValue.guard(() async {
-      await _repository.uploadAvatar(file, fileName);
-      await ref.read(usersProvider.notifier).onAvatarUpload();
+      await _repository.uploadAvatar(file, fileName); // repo를 통해 storage에 업로드
+      await ref
+          .read(usersProvider.notifier)
+          .onAvatarUpload(); // hasAvatar 업데이트를 통해 watch에 전달. 리랜더링
     });
   }
 }
