@@ -26,8 +26,14 @@ class VideoTimelineScreenState extends ConsumerState<VideoTimelineScreen> {
       duration: _scrollDuration,
       curve: _scrollCurve,
     );
+    print("시작");
+    print(page);
+    print(_itemCount);
+    print("끝");
     if (page == _itemCount - 1) {
+      print("fetch 시작");
       ref.watch(timelineProvider.notifier).fetchNextFetch();
+      print("fetch 끝");
     }
   }
 
@@ -64,6 +70,7 @@ class VideoTimelineScreenState extends ConsumerState<VideoTimelineScreen> {
             ),
         data: (videos) {
           _itemCount = videos.length;
+          print(videos.length);
           return RefreshIndicator(
             // 화면을 아래로 끌어내렸을 때 상단에 리프레쉬 버튼이 나타나면서 새로고침해주는 위젯
             onRefresh: _onRefresh, // future를 반환해야 함. 새로고침 시 수행할 활동.

@@ -161,9 +161,7 @@ class VideoPostState extends ConsumerState<VideoPost>
         : ref
             .read(playbackConfigProvider)
             .muted; // context.read<PlaybackConfigViewModel>().muted;
-
     if (_isMute) {
-      print(_isMute);
       _videoPlayerController.setVolume(0);
     } else {
       _videoPlayerController.setVolume(1);
