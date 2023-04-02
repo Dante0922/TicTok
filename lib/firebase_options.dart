@@ -70,8 +70,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '306747400618',
     projectId: 'tictok-study',
     storageBucket: 'tictok-study.appspot.com',
-    iosClientId:
-        '306747400618-pr367npdftcap35464btnaj4dkpkl2eu.apps.googleusercontent.com',
+    iosClientId: '306747400618-pr367npdftcap35464btnaj4dkpkl2eu.apps.googleusercontent.com',
     iosBundleId: 'com.dante.tiktokClone',
   );
 }

@@ -78,6 +78,7 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
   Widget build(BuildContext context) {
     //final args = ModalRoute.of(context)!.settings.arguments as EmailScreenArgs;
     //  print(args.username);
+
     return GestureDetector(
       onTap: _onScaffoldTap,
       child: Scaffold(

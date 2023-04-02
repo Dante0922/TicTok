@@ -26,7 +26,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   bool _hasPermission = false;
   // final bool _deniedPermission = false;
   bool _isSelfieMode = false;
-  late final bool _noCamera = kDebugMode && Platform.isIOS;
+  late final bool _noCamera = kDebugMode && !Platform.isIOS;
   late CameraController _cameraController;
   late FlashMode _flashMode;
   late double maxZoom;

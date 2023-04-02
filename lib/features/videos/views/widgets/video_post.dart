@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/videos/models/video_model.dart';
 import 'package:tiktok_clone/features/videos/view_models/playback_config_vm.dart';
+import 'package:tiktok_clone/features/videos/view_models/video_post_view_model.dart';
 import 'package:tiktok_clone/features/videos/views/widgets/video_button.dart';
 import 'package:tiktok_clone/features/videos/views/widgets/video_comments.dart';
 
@@ -17,11 +19,13 @@ class VideoPost extends ConsumerStatefulWidget {
   //onVideoFinished 함수는 state가 아닌 Widget으로 넘겨받았다.
   //이를 아래 state에서 쓰고 싶다면 widget.onVideoFinish로 사용할 수 있다.
   final int index;
+  final VideoModel videoData;
 
   const VideoPost({
     super.key,
     required this.onVideoFinished,
     required this.index,
+    required this.videoData,
   });
 
   @override
@@ -30,17 +34,17 @@ class VideoPost extends ConsumerStatefulWidget {
 
 class VideoPostState extends ConsumerState<VideoPost>
     with SingleTickerProviderStateMixin {
-  final VideoPlayerController _videoPlayerController =
-      VideoPlayerController.asset(
-          "assets/videos/IMG_9255.MOV"); //비디오를 asset으로 갖는 Controller를 만들어준다.
+  late final VideoPlayerController _videoPlayerController;
 
   bool _isPaused = false;
   final Duration _animationDuration = const Duration(milliseconds: 100);
   late final AnimationController _animationController; // 애니메이션 컨트롤러 선언
-  final String _text = "크림 뒹굴뒹굴~~ 언능 건강해지자 쿨미야!!";
+  final String _text = "텍스트~~~@@@@";
   bool _seeMore = false;
   bool _isMute = false;
-
+  bool isLiked = false;
+  int _likeCount = 0;
+  int _commentCount = 0;
   void _onVideoChange() {
     //비디오의 길이와 현재위치(position)이 일치하면 비디오가 끝난 것으로 간주하고
     //내려받은 onVideoFinished를 실행시킨다.
@@ -56,6 +60,10 @@ class VideoPostState extends ConsumerState<VideoPost>
     //비디오를 불러오기까지 기다려줘야 하기 때문에 async를 활용한다.
     //컨트롤러.initialize()를 통해 비디오를 불러오고 play()를 통해 실행시킨 뒤 setState를 한다.
     //또한 종료를 알기 위해 이벤트리스너를 컨트롤러에 추가하고 이벤트 시 종료를 감지하는 함수를 넣어준다.
+    _videoPlayerController =
+        VideoPlayerController.network(widget.videoData.fileUrl);
+    //  VideoPlayerController.asset(
+    //       "assets/videos/IMG_9255.MOV"); //비디오를 asset으로 갖는 Controller를 만들어준다.
     await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping(true); //비디오가 무한 반복되도록 설정
     _videoPlayerController.addListener(_onVideoChange);
@@ -65,6 +73,12 @@ class VideoPostState extends ConsumerState<VideoPost>
       // 사용자에게 불쾌한 경험을 끼칠 수 있기 때문. web이라면 volume를 0으로 줄여서 방지하자.
       await _videoPlayerController.setVolume(0);
     }
+    isLiked = await ref
+        .read(videoPostProvider(widget.videoData.id).notifier)
+        .checkIsLiked();
+    _likeCount = int.parse(S.of(context).likeCount(widget.videoData.likes));
+    _commentCount =
+        int.parse(S.of(context).commentCount(widget.videoData.comments));
     setState(() {});
   }
 
@@ -173,6 +187,18 @@ class VideoPostState extends ConsumerState<VideoPost>
     _onTogglePause();
   }
 
+  void _onLikeTap() {
+    ref.read(videoPostProvider(widget.videoData.id).notifier).likeVideo();
+    setState(() {
+      if (isLiked) {
+        _likeCount--;
+      } else {
+        _likeCount++;
+      }
+      isLiked = !isLiked;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // final videoConfig = context.dependOnInheritedWidgetOfExactType<
@@ -180,7 +206,7 @@ class VideoPostState extends ConsumerState<VideoPost>
     //   final videoConfig2 = VideoConfigData.of(context).autoMute;
 
     //  print(VideoConfigData.of(context).autoMute);
-
+    print(widget.videoData.creatorUid);
     return VisibilityDetector(
       //보이는 정도를 추적할 수 있는 위젯
       key: Key("${widget.index}"),
@@ -192,8 +218,9 @@ class VideoPostState extends ConsumerState<VideoPost>
             child: _videoPlayerController.value.isInitialized
                 ? VideoPlayer(
                     _videoPlayerController) //VideoPlayer 위젯은 컨트롤를 필수로 받는다.
-                : Container(
-                    color: Colors.black,
+                : Image.network(
+                    widget.videoData.thumbnailUrl,
+                    fit: BoxFit.cover,
                   ),
           ),
           Positioned.fill(
@@ -239,9 +266,9 @@ class VideoPostState extends ConsumerState<VideoPost>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "@크림",
-                  style: TextStyle(
+                Text(
+                  "@${widget.videoData.creater}",
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: Sizes.size20,
@@ -251,7 +278,9 @@ class VideoPostState extends ConsumerState<VideoPost>
                 Row(
                   children: [
                     Text(
-                      _seeMore ? _text : _text.substring(0, 7),
+                      _seeMore
+                          ? widget.videoData.description
+                          : _text.substring(0, 7),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: Sizes.size16,
@@ -303,31 +332,38 @@ class VideoPostState extends ConsumerState<VideoPost>
             right: 10,
             child: Column(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 25,
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
                   foregroundImage: NetworkImage(
-                      "https://avatars.githubusercontent.com/u/101305519?s=400&u=49f84ad7b2032a7809bbf656cb96f923566bfb51&v=4"),
-                  child: Text("크림"),
+                      "https://firebasestorage.googleapis.com/v0/b/tictok-study.appspot.com/o/avatars%2F${widget.videoData.creatorUid}?alt=media"),
+                  child: Text(
+                    "@${widget.videoData.creater}",
+                  ),
                 ),
                 Gaps.v24,
-                VideoButton(
-                  icon: FontAwesomeIcons.solidHeart,
-                  text: S.of(context).likeCount(989898888),
+                GestureDetector(
+                  onTap: _onLikeTap,
+                  child: VideoButton(
+                    icon: isLiked
+                        ? FontAwesomeIcons.solidHeart
+                        : FontAwesomeIcons.heart,
+                    likes: _likeCount,
+                  ),
                 ),
                 Gaps.v24,
                 GestureDetector(
                   onTap: () => _onCommentTap(context),
                   child: VideoButton(
                     icon: FontAwesomeIcons.solidComment,
-                    text: S.of(context).commentCount(32321231233332),
+                    likes: _commentCount,
                   ),
                 ),
                 Gaps.v24,
                 const VideoButton(
                   icon: FontAwesomeIcons.share,
-                  text: "Share",
+                  likes: 0,
                 )
               ],
             ),
