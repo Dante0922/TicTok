@@ -61,6 +61,14 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
       "homepage": homepage,
     });
   }
+
+  Future<List<UserProfileModel>> getUserList() async {
+    final result = await _usersRepository.fetchUsers();
+    final users = result.docs.map(
+      (doc) => UserProfileModel.fromJson(doc.data()),
+    );
+    return users.toList();
+  }
 }
 
 final usersProvider = AsyncNotifierProvider<UsersViewModel, UserProfileModel>(

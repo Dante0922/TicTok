@@ -88,3 +88,24 @@ export const onLikedRemoved = functions.firestore
       .doc(videoId)
       .update({ likes: admin.firestore.FieldValue.increment(-1) });
   });
+
+export const onChatroomCreated = functions.firestore
+  .document("chat_rooms/{chatroomId}")
+  .onCreate(async (snapshot, context) => {
+    const db = admin.firestore();
+    const [personA, personB] = snapshot.id.split("000");
+
+    await db
+      .collection("users")
+      .doc(personA)
+      .collection("chat_rooms")
+      .doc(snapshot.id)
+      .set({ personA: personA, personB: personB });
+
+    await db
+      .collection("users")
+      .doc(personB)
+      .collection("chat_rooms")
+      .doc(snapshot.id)
+      .set({ personA: personB, personB: personA });
+  });

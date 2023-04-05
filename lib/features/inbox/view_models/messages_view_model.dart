@@ -13,7 +13,7 @@ class MessageViewModel extends AsyncNotifier<void> {
     _repo = ref.read(messagesRepo);
   }
 
-  Future<void> sendMessage(String text) async {
+  Future<void> sendMessage(String text, String chatroomId) async {
     final user = ref.read(authRepo).user;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
@@ -22,8 +22,13 @@ class MessageViewModel extends AsyncNotifier<void> {
         userId: user!.uid,
         createdAt: DateTime.now().millisecondsSinceEpoch,
       );
-      _repo.sendMessage(message);
+      _repo.sendMessage(message, chatroomId);
     });
+  }
+
+  Future<void> deleteMessage(MessageModel message, String chatroomId) async {
+    print("heeeeeeeellllooo??");
+    await _repo.deleteMessage(message, chatroomId);
   }
 }
 
@@ -33,11 +38,12 @@ final messageProvider = AsyncNotifierProvider<MessageViewModel, void>(
 
 // StreamProvider는 backend의 정보를 항상 listen하고 변화할 때마다 결과값을 반환해준다.
 // 항상 켜져있기 때문에 autoDispose를 통해 불필요시 자동종료될 수 있도록 달아주어야 한다!
-final chatProvider = StreamProvider.autoDispose<List<MessageModel>>((ref) {
+final chatProvider = StreamProvider.autoDispose
+    .family<List<MessageModel>, String>((ref, chatroomId) {
   final db = FirebaseFirestore.instance;
   return db
       .collection("chat_rooms")
-      .doc("8d7qoCln0IXhD69BQrDV")
+      .doc(chatroomId)
       .collection("texts")
       .orderBy("createdAt")
       .snapshots() //stream을 반환하는 snapshots(). 변경사항이 있을 때마다 값을 반환한다.

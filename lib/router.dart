@@ -8,6 +8,7 @@ import 'package:tiktok_clone/features/authentication/views/sign_up_screen.dart';
 import 'package:tiktok_clone/features/inbox/views/activity_screen.dart';
 import 'package:tiktok_clone/features/inbox/views/chat_detail_screen.dart';
 import 'package:tiktok_clone/features/inbox/views/chats_screen.dart';
+import 'package:tiktok_clone/features/inbox/views/select_chat_screen.dart';
 
 import 'package:tiktok_clone/features/onboarding/interests_screen.dart';
 import 'package:tiktok_clone/features/videos/views/video_recording_screen.dart';
@@ -67,9 +68,9 @@ final routerProvider = Provider((ref) {
             path: ChatDetailScreen.routeURL,
             name: ChatDetailScreen.routeName,
             builder: (context, state) {
-              final chatId = state.params["chatId"]!;
+              final chatroomId = state.params["chatroomId"]!;
               return ChatDetailScreen(
-                chatId: chatId,
+                chatroomId: chatroomId,
               );
             },
           ),
@@ -92,6 +93,11 @@ final routerProvider = Provider((ref) {
             );
           },
         ),
+      ),
+      GoRoute(
+        path: SelectChatScreen.routeUrl,
+        name: SelectChatScreen.routeName,
+        builder: (context, state) => const SelectChatScreen(),
       ),
     ],
   );
