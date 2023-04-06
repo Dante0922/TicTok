@@ -58,6 +58,8 @@ class TicTokApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // ref.watch(notificationsProvider(context)); // context를 전달해주지만, router보다 위에 있어서 이 context는 router정보가 없다.
+    //ShellRouter 안으로 이동
     // S.load(const Locale("en")); // 앱의 언어 설정을 원하는 값으로 변경한다.
     return //VideoConfig(
         // 상속을 위해 젤 위에 감싸줌.
