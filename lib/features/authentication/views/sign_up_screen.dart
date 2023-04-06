@@ -91,7 +91,8 @@ class SignUpScreen extends ConsumerWidget {
                 children: [
                   Gaps.v80,
                   Text(
-                    S.of(context).signUpTitle("TikTok", DateTime.now()),
+                    // S.of(context).signUpTitle("TikTok", DateTime.now()),
+                    "Sign up for TikTok",
                     // AppLocalizations.of(context)!.signUpTitle("TikTokasda"),
                     //"Sign up for TicTok",
                     // 일일히 텍스트스타일을 지정하지 않고 textTheme를 활용해보자.
@@ -159,7 +160,8 @@ class SignUpScreen extends ConsumerWidget {
                           // 이 크기가 무제한이 된다. 이를 방지하기 위해 Expanded를 사용해주자.
                           child: AuthButton(
                             icon: const FaIcon(FontAwesomeIcons.user),
-                            text: S.of(context).emailPasswordButton,
+                            text:
+                                "Use email & password", //S.of(context).emailPasswordButton,
                             onTapFunction: _onEmailTap,
                           ),
                         ),
@@ -202,8 +204,8 @@ class SignUpScreen extends ConsumerWidget {
                   GestureDetector(
                     onTap: () => _onloginTap(context),
                     child: Text(
-                      S.of(context).logIn(
-                          "female"), // intl_en.arb에서 스트링에 다른 표기도 바꿀 수 있다.
+                      "Log in",
+                      //   S.of(context).logIn("female"), // intl_en.arb에서 스트링에 다른 표기도 바꿀 수 있다.
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).primaryColor,
